@@ -10,8 +10,20 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+app.set("json spaces", 2);
 app.use(cors());
 app.use(express.json());
+
+/* ================= ROOT STATUS ================= */
+app.get("/", (req, res) => {
+  res.json({
+    status: "success",
+    message: "Admin Dashboard API is running",
+    endpoints: {
+      candidates: "/api/candidates"
+    }
+  });
+});
 
 /* ================= SERVE UPLOADS (CRITICAL) ================= */
 app.use(
@@ -21,17 +33,5 @@ app.use(
 
 /* ================= ROUTES ================= */
 app.use("/api/candidates", candidateRoutes);
-
-
-/* ================= SERVE FRONTEND (BUILD) ================= */
-const __frontendPath = path.join(__dirname, "..", "..", "frontend", "dist");
-app.use(express.static(__frontendPath));
-
-/* ================= SPA FALLBACK ================= */
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__frontendPath, "index.html"));
-});
-
-
 
 export default app;
